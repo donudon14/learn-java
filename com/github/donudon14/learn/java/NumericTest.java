@@ -14,7 +14,7 @@ public final class NumericTest {
     }
 
     private static void testPow() {
-        for (int base = -64; base < 64; ++base) {
+        for (int base = -4096; base < 4096; ++base) {
             int result = 1;
             for (int exp = 0; exp < SIZE; result *= base, ++exp) {
                 assert result == pow(base, exp);
