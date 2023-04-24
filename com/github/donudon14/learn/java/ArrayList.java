@@ -12,7 +12,7 @@ import static java.util.Objects.checkIndex;
 
 public class ArrayList<E> extends AbstractList<E>
     implements List<E>, RandomAccess {
-    private static final int DEFAULT_CAPACITY = 10, MAX_LENGTH = MAX_VALUE - 2;
+    private static final int DEFAULT_CAPACITY = 10, MAX_ARRAY_LENGTH = MAX_VALUE - 2;
 
     private E[] elementData;
     private int size;
@@ -95,15 +95,15 @@ public class ArrayList<E> extends AbstractList<E>
 
     private final void grow(final int minCapacity) {
         assert elementData.length < minCapacity;
-        elementData = copyOf(elementData, newCapacity(minCapacity));
+        elementData = copyOf(elementData, newLength(minCapacity));
     }
 
-    private final int newCapacity(final int minCapacity) {
+    private final int newLength(final int minCapacity) {
         assert elementData.length < minCapacity;
         final int step = elementData.length >> 1;
-        return elementData.length == MAX_LENGTH ? MAX_VALUE : max(
+        return elementData.length == MAX_ARRAY_LENGTH ? MAX_VALUE : max(
             minCapacity,
-            step + min(elementData.length, MAX_LENGTH - step)
+            step + min(elementData.length, MAX_ARRAY_LENGTH - step)
         );
     }
 }

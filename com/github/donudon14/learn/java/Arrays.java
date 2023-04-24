@@ -157,6 +157,46 @@ public final class Arrays {
         return min;
     }
 
+    public static <T> void reverse(final T[] array) {
+        reverse(array, 0, array.length);
+    }
+
+    public static <T> void reverse(
+        final T[] array,
+        final int fromIndex,
+        final int toIndex
+    ) {
+        checkFromToIndex(fromIndex, toIndex, array.length);
+        while (fromIndex < --toIndex)
+            swap(array, fromIndex++, toIndex);
+    }
+
+    public static <T> void rotate(final T[] array, final int distance) {
+        rotate(array, distance)
+    }
+
+    public static <T> void rotate(
+        final T[] array,
+        final int fromIndex,
+        final int toIndex,
+        final int distance
+    ) {
+        checkFromToIndex(fromIndex, toIndex, array.length);
+        final int size = toIndex - fromIndex;
+        if (size == 0)
+            return;
+
+        distance = -distance % size;
+        if (distance < 0)
+            distance += size;
+        if (distance == 0)
+            return;
+
+        reverse(array, fromIndex, distance);
+        reverse(array, distance, toIndex);
+        reverse(array);
+    }
+
     public static <T> void swap(final T[] array, final int i, final int j) {
         final T temp = array[i];
         array[i] = array[j];
