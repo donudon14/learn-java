@@ -163,8 +163,8 @@ public final class Arrays {
 
     public static <T> void reverse(
         final T[] array,
-        final int fromIndex,
-        final int toIndex
+        int fromIndex,
+        int toIndex
     ) {
         checkFromToIndex(fromIndex, toIndex, array.length);
         while (fromIndex < --toIndex)
@@ -179,7 +179,7 @@ public final class Arrays {
         final T[] array,
         int fromIndex,
         final int toIndex,
-        final int distance
+        int distance
     ) {
         checkFromToIndex(fromIndex, toIndex, array.length);
         final int size = toIndex - fromIndex;
