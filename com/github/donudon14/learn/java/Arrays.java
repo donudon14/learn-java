@@ -172,7 +172,7 @@ public final class Arrays {
     }
 
     public static <T> void rotate(final T[] array, final int distance) {
-        rotate(array, distance);
+        rotate(array, 0, array.length, distance);
     }
 
     public static <T> void rotate(
