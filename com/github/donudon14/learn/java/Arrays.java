@@ -177,7 +177,7 @@ public final class Arrays {
 
     public static <T> void rotate(
         final T[] array,
-        final int fromIndex,
+        int fromIndex,
         final int toIndex,
         final int distance
     ) {
@@ -186,15 +186,26 @@ public final class Arrays {
         if (size == 0)
             return;
 
-        distance = -distance % size;
+        distance = distance % size;
         if (distance < 0)
             distance += size;
         if (distance == 0)
             return;
 
-        reverse(array, fromIndex, distance);
-        reverse(array, distance, toIndex);
-        reverse(array);
+        final int bound = toIndex - distance;
+        for (int nMoved = 0; nMoved < size; ++fromIndex) {
+            int i = fromIndex;
+            do {
+                final int j;
+                if (i >= bound)
+                    j = i + (distance - size);
+                else
+                    j = i + distance;
+                swap(array, i, j);
+                i = j;
+                ++nMoved;
+            } while (i != fromIndex);
+        }
     }
 
     public static <T> void swap(final T[] array, final int i, final int j) {
