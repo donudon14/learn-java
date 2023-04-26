@@ -186,23 +186,21 @@ public final class Arrays {
         if (size == 0)
             return;
 
-        distance = distance % size;
-        if (distance < 0)
-            distance += size;
+        distance %= size;
         if (distance == 0)
             return;
+        if (distance < 0)
+            distance += size;
 
         final int bound = toIndex - distance;
         for (int nMoved = 0; nMoved < size; ++fromIndex) {
             int i = fromIndex;
+            var value = array[i];
             do {
-                final int j;
-                if (i >= bound)
-                    j = i + (distance - size);
-                else
-                    j = i + distance;
-                swap(array, i, j);
-                i = j;
+                i += i >= bound ? distance - size : distance;
+                final var temp = array[i];
+                array[i] = value;
+                value = temp;
                 ++nMoved;
             } while (i != fromIndex);
         }
