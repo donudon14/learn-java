@@ -13,7 +13,7 @@ public class ArraysTest{
         for (int i = -LENGTH; i < LENGTH << 1; ++i) {
             setAll(actual, j -> j);
             for (int j = 0; j < LENGTH; ++j)
-                expected[j] = (i + j + LENGTH) % LENGTH;
+                expected[j] = ((i % LENGTH + j) % LENGTH + LENGTH) % LENGTH;
             rotate(actual, -i);
             assert Arrays.equals(expected, actual);
         }
