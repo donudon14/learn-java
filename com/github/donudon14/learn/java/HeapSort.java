@@ -18,7 +18,6 @@ public final class HeapSort {
         final int toIndex,
         final Comparator<? super T> comparator
     ) {
-        checkFromToIndex(fromIndex, toIndex, array.length);
         Heap.make(array, fromIndex, toIndex, comparator);
         Heap.sort(array, fromIndex, toIndex, comparator);
     }
