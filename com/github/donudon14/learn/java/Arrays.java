@@ -30,6 +30,38 @@ public final class Arrays {
         return false;
     }
 
+    /**
+     * a.compareTo(b) == 0 doesn't implie a.equals(b)
+     * assert BigDecimal.ONE.equals(BigDecimal.valueOf(1.0)) == false;
+     * assert BigDecimal.ONE.compareTo(BigDecimal.valueOf(1.0)) == 0;
+     */
+    public static <T> boolean equalTo(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) == 0;
+    }
+
+    public static <T> boolean greaterThan(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) > 0;
+    }
+
+    public static <T> boolean greaterThanEqual(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) >= 0;
+    }
+
     public static <T> int indexOfMax(
         final T[] array,
         final Comparator<? super T> comparator
@@ -85,15 +117,11 @@ public final class Arrays {
 
     public static <T> boolean isSorted(
         final T[] array,
-        int fromIndex,
+        final int fromIndex,
         final int toIndex,
         final Comparator<? super T> comparator
     ) {
-        checkFromToIndex(fromIndex, toIndex, array.length);
-        for (; fromIndex + 1 < toIndex; ++fromIndex)
-            if (comparator.compare(array[fromIndex], array[fromIndex + 1]) > 0)
-                return false;
-        return true;
+        return isSortedUntil(array, fromIndex, toIndex, comparator) == toIndex;
     }
 
     public static <T> int isSortedUntil(
@@ -111,9 +139,27 @@ public final class Arrays {
     ) {
         checkFromToIndex(fromIndex, toIndex, array.length);
         for (; fromIndex + 1 < toIndex; ++fromIndex)
-            if (comparator.compare(array[fromIndex], array[fromIndex + 1]) > 0)
+            if (greaterThan(array, fromIndex, fromIndex + 1, comparator))
                 return fromIndex + 1;
         return toIndex;
+    }
+
+    public static <T> boolean lessThan(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) < 0;
+    }
+
+    public static <T> boolean lessThanEqual(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) <= 0;
     }
 
     public static <T> T max(
@@ -158,6 +204,20 @@ public final class Arrays {
         while (++fromIndex < toIndex)
             min = Comparators.min(min, array[fromIndex], comparator);
         return min;
+    }
+
+    /**
+     * a.compareTo(b) == 0 doesn't implie a.equals(b)
+     * assert BigDecimal.ONE.equals(BigDecimal.valueOf(1.0)) == false;
+     * assert BigDecimal.ONE.compareTo(BigDecimal.valueOf(1.0)) == 0;
+     */
+    public static <T> boolean notEqualTo(
+        final T[] array,
+        final int i,
+        final int j,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(array, i, j, comparator) != 0;
     }
 
     public static <T> void reverse(final T[] array) {
