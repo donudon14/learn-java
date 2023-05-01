@@ -1,8 +1,5 @@
 package com.github.donudon14.learn.java;
 
-import com.github.donudon14.learn.java.Comparators;
-import java.util.Comparator;
-
 public final class Comparables {
     public static byte clamp(
         final byte x,
@@ -57,7 +54,33 @@ public final class Comparables {
         final T a,
         final T b
     ) {
-        return Comparators.clamp(x, a, b, Comparator.<T>naturalOrder());
+        return lessThan(x, a) ? a : lessThan(b, x) ? b : x;
+    }
+
+    /**
+     * a.compareTo(b) == 0 doesn't implie a.equals(b)
+     * assert BigDecimal.ONE.equals(BigDecimal.valueOf(1.0)) == false;
+     * assert BigDecimal.ONE.compareTo(BigDecimal.valueOf(1.0)) == 0;
+     */
+    public static <T extends Comparable<? super T>> boolean equalTo(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) == 0;
+    }
+
+    public static <T extends Comparable<? super T>> boolean greaterThan(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) > 0;
+    }
+
+    public static <T extends Comparable<? super T>> boolean greaterThanEqual(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) >= 0;
     }
 
     public static boolean inRange(
@@ -113,7 +136,7 @@ public final class Comparables {
         final T a,
         final T b
     ) {
-        return Comparators.inRange(x, a, b, Comparator.<T>naturalOrder());
+        return greaterThanEqual(x, a) && lessThan(x, b);
     }
 
     public static boolean inRangeClosed(
@@ -169,20 +192,46 @@ public final class Comparables {
         final T a,
         final T b
     ) {
-        return Comparators.inRangeClosed(x, a, b, Comparator.<T>naturalOrder());
+        return greaterThanEqual(x, a) && greaterThanEqual(b, x);
+    }
+
+    public static <T extends Comparable<? super T>> boolean lessThan(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) < 0;
+    }
+
+    public static <T extends Comparable<? super T>> boolean lessThanEqual(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) <= 0;
     }
 
     public static <T extends Comparable<? super T>> T max(
         final T a,
         final T b
     ) {
-        return Comparators.max(a, b, Comparator.<T>naturalOrder());
+        return lessThan(a, b) ? b : a;
     }
 
     public static <T extends Comparable<? super T>> T min(
         final T a,
         final T b
     ) {
-        return Comparators.min(a, b, Comparator.<T>naturalOrder());
+        return greaterThan(a, b) ? b : a;
+    }
+
+    /**
+     * a.compareTo(b) == 0 doesn't implie a.equals(b)
+     * assert BigDecimal.ONE.equals(BigDecimal.valueOf(1.0)) == false;
+     * assert BigDecimal.ONE.compareTo(BigDecimal.valueOf(1.0)) == 0;
+     */
+    public static <T extends Comparable<? super T>> boolean notEqualTo(
+        final T a,
+        final T b
+    ) {
+        return a.compareTo(b) != 0;
     }
 }
