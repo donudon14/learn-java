@@ -344,6 +344,50 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         return value;
     }
 
+    private final void rotateLeft(final Entry<K, V> entry) {
+        assert entry != null;
+        final var right = entry.right;
+        entry.right = right.left;
+        if (right.left != null)
+            right.left.parent = entry;
+        right.parent = entry.parent;
+        if (entry.parent == null)
+            root = right;
+        else if (entry == entry.parent.left)
+            entry.parent.left = right;
+        else
+            entry.parent.right = right;
+        right.left = entry;
+        entry.parent = right;
+        if (right.balance == 0) {
+            entry.balance = 1;
+            right.balance = -1;
+        } else
+            entry.balance = right.balance = 0;
+    }
+
+    private static void rotateRight() {
+        assert entry != null;
+        final var left = entry.left;
+        entry.left = left.right;
+        if (left.right != null)
+            left.right.parent = entry;
+        left.parent = entry.parent;
+        if (entry.parent == null)
+            root = left;
+        else if (entry == entry.parent.right)
+            entry.parent.right = left;
+        else
+            entry.parent.left = left;
+        left.right = entry;
+        entry.parent = left;
+        if (left.balance == 0) {
+            entry.balance = -1;
+            left.balance = 1;
+        } else
+            entry.balance = left.balance = 0;
+    }
+
     private static <K, V> Map.Entry<K,V> simpleImmutableEntry(
         final Entry<K, V> entry
     ) {
