@@ -135,7 +135,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     @Override
     public final V get(final Object object) {
         final var entry = getEntry(object);
-        return (entry == null ? null : entry.value);
+        return entry == null ? null : entry.value;
     }
 
     private final Entry<K, V> getEntry(final Object object) {
