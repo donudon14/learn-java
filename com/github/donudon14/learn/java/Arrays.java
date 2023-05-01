@@ -23,7 +23,7 @@ public final class Arrays {
         final int j,
         final Comparator<? super T> comparator
     ) {
-        if (compare(array, i, j, comparator) > 0) {
+        if (greaterThan(array, i, j, comparator)) {
             swap(array, i, j);
             return true;
         }
@@ -106,42 +106,6 @@ public final class Arrays {
             if (comparator.compare(array[index], array[fromIndex]) > 0)
                 index = fromIndex;
         return index;
-    }
-
-    public static <T> boolean isSorted(
-        final T[] array,
-        final Comparator<? super T> comparator
-    ) {
-        return isSorted(array, 0, array.length, comparator);
-    }
-
-    public static <T> boolean isSorted(
-        final T[] array,
-        final int fromIndex,
-        final int toIndex,
-        final Comparator<? super T> comparator
-    ) {
-        return isSortedUntil(array, fromIndex, toIndex, comparator) == toIndex;
-    }
-
-    public static <T> int isSortedUntil(
-        final T[] array,
-        final Comparator<? super T> comparator
-    ) {
-        return isSortedUntil(array, 0, array.length, comparator);
-    }
-
-    public static <T> int isSortedUntil(
-        final T[] array,
-        int fromIndex,
-        final int toIndex,
-        final Comparator<? super T> comparator
-    ) {
-        checkFromToIndex(fromIndex, toIndex, array.length);
-        for (; fromIndex + 1 < toIndex; ++fromIndex)
-            if (greaterThan(array, fromIndex, fromIndex + 1, comparator))
-                return fromIndex + 1;
-        return toIndex;
     }
 
     public static <T> boolean lessThan(
