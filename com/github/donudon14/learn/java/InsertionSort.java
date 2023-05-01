@@ -1,9 +1,9 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
-import static java.util.Objects.checkFromToIndex;
-import static java.lang.System.arraycopy;
 import static com.github.donudon14.learn.java.BinarySearch.upperBound;
+import static java.lang.System.arraycopy;
+import static java.util.Objects.checkFromToIndex;
 
 public final class InsertionSort {
     public static <T> void sort(
