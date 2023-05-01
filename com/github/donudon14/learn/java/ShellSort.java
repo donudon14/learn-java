@@ -1,10 +1,10 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
+import static com.github.donudon14.learn.java.Arrays.greaterThan;
 import static com.github.donudon14.learn.java.Arrays.swap;
 import static java.lang.Math.min;
 import static java.util.Objects.checkFromToIndex;
-import static com.github.donudon14.learn.java.Arrays.greaterThan;
 
 public final class ShellSort {
     private static final int[] GAPS = new int[328];

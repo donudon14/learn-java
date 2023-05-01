@@ -1,10 +1,9 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
-import static java.util.Arrays.asList;
-import static java.util.Objects.checkFromToIndex;
 import static com.github.donudon14.learn.java.Arrays.indexOfMin;
 import static com.github.donudon14.learn.java.Arrays.swap;
+import static java.util.Objects.checkFromToIndex;
 
 public final class SelectionSort {
     public static <T> void sort(
