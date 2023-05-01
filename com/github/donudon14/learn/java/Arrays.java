@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 import static java.util.Objects.checkFromToIndex;
 
 public final class Arrays {
+    private Arrays() {
+    }
+
     public static <T> int compare(
         final T[] array,
         final int i,
