@@ -12,8 +12,8 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) < 0 ? a :
-            comparator.compare(b, x) < 0 ? b : x;
+        return lessThan(x, a, comparator) ? a :
+            lessThan(b, x, comparator) ? b : x;
     }
 
     /**
@@ -51,7 +51,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) >= 0 && comparator.compare(x, b) < 0;
+        return greaterThanEqual(x, a, comparator) && lessThan(x, b, comparator);
     }
 
     public static <T> boolean inRangeClosed(
@@ -60,7 +60,8 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) >= 0 && comparator.compare(b, x) >= 0;
+        return greaterThanEqual(x, a, comparator) &&
+            greaterThanEqual(b, x, comparator);
     }
 
     public static <T> boolean lessThan(
@@ -84,7 +85,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(a, b) < 0 ? b : a;
+        return lessThan(a, b, comparator) ? b : a;
     }
 
     public static <T> T min(
@@ -92,7 +93,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(a, b) > 0 ? b : a;
+        return greaterThan(a, b, comparator) ? b : a;
     }
 
     /**
