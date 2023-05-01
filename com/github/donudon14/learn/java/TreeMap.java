@@ -315,9 +315,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     @Override
     public final V remove(final Object object) {
         final var node = getEntry(object);
-        if (node == null)
-            return null;
-        return removeEntry(node);
+        return node == null ? null : removeEntry(node);
     }
 
     private final V removeEntry(Entry<K, V> entry) {
@@ -329,6 +327,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
             entry.value = next.value;
             entry = next;
         }
+        assert entry.left == null || entry.right == null;
         final var replacement = entry.left == null ? entry.right : entry.left;
         if (entry.parent == null)
             root = replacement;
