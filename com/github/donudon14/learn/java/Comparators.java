@@ -17,6 +17,22 @@ public final class Comparators {
             compare(b, x, comparator) < 0 ? b : x;
     }
 
+    public static <T> boolean greaterThan(
+        final T a,
+        final T b,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(a, b, comparator) > 0;
+    }
+
+    public static <T> boolean greaterThanEqual(
+        final T a,
+        final T b,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(a, b, comparator) >= 0;
+    }
+
     public static <T> boolean inRange(
         final T x,
         final T a,
@@ -33,6 +49,22 @@ public final class Comparators {
         final Comparator<? super T> comparator
     ) {
         return compare(x, a, comparator) >= 0 && compare(b, x, comparator) >= 0;
+    }
+
+    public static <T> boolean lessThan(
+        final T a,
+        final T b,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(a, b, comparator) < 0;
+    }
+
+    public static <T> boolean lessThanEqual(
+        final T a,
+        final T b,
+        final Comparator<? super T> comparator
+    ) {
+        return compare(a, b, comparator) <= 0;
     }
 
     public static <T> T max(
