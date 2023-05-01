@@ -152,10 +152,11 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
                 else
                     return entry;
             }
-        } else
+        } else {
+            @SuppressWarnings("unchecked")
+            final var key = (K) object;
             for (var entry = root; entry != null; ) {
-                @SuppressWarnings("unchecked")
-                final int result = comparator.compare((K) object, entry.key);
+                final int result = comparator.compare(key, entry.key);
                 if (result < 0)
                     entry = entry.left;
                 else if (result > 0)
@@ -163,6 +164,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
                 else
                     return entry;
             }
+        }
         return null;
     }
 
