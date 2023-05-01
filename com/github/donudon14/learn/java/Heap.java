@@ -11,35 +11,35 @@ public final class Heap {
     private Heap() {
     }
 
-    public static <T> boolean isHeap() {
+    public static <T> boolean isHeap(
         final T[] heap,
         final Comparator<? super T> comparator
-    } {
-        return isHeap(heap, 0, heap.length);
+    ) {
+        return isHeap(heap, 0, heap.length, comparator);
     }
 
-    public static <T> boolean isHeap() {
+    public static <T> boolean isHeap(
         final T[] heap,
         final int fromIndex,
         final int toIndex,
         final Comparator<? super T> comparator
-    } {
-        isHeapUntil(heap, fromIndex, toIndex, comparator) == toIndex;
+    ) {
+        return isHeapUntil(heap, fromIndex, toIndex, comparator) == toIndex;
     }
 
-    public static <T> int isHeapUntil() {
+    public static <T> int isHeapUntil(
         final T[] heap,
         final Comparator<? super T> comparator
-    } {
+    ) {
         return isHeapUntil(heap, 0, heap.length, comparator);
     }
 
-    public static <T> int isHeapUntil() {
+    public static <T> int isHeapUntil(
         final T[] heap,
         final int fromIndex,
         final int toIndex,
         final Comparator<? super T> comparator
-    } {
+    ) {
         checkFromToIndex(fromIndex, toIndex, heap.length);
         for (int parent = 0, child = 1; child < toIndex; ++parent, ++child)
             if (lessThan(heap, parent, child, comparator) ||
