@@ -1,6 +1,7 @@
 package com.github.donudon14.learn.java;
 
 import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -12,13 +13,13 @@ import java.util.SortedMap;
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
-public abstract class TreeMap<K, V> extends AbstractMap<K, V>
+public final class TreeMap<K, V> extends AbstractMap<K, V>
     implements NavigableMap<K, V>, Cloneable {
     private Entry<K, V> root = null;
     private final Comparator<? super K> comparator = null;
     private int size = 0;
 
-    public static final class Entry<K, V> implements Map.Entry<K, V> {
+    private static final class Entry<K, V> implements Map.Entry<K, V> {
         private K key = null;
         private V value = null;
         private Entry<K, V> left = null, parent = null, right = null;
@@ -88,6 +89,12 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final void clear() {
+        root = null;
+        size = 0;
+    }
+
+    @Override
     public final NavigableSet<K> descendingKeySet() {
         throw new UnsupportedOperationException();
     }
@@ -100,6 +107,11 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
     @Override
     public final Set<Map.Entry<K,V>> entrySet() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final Map.Entry<K, V> firstEntry() {
+        return simpleImmutableEntry(getFirstEntry());
     }
 
     private final Entry<K, V> getEntry(final Object object) {
@@ -131,6 +143,22 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
         return null;
     }
 
+    private final Entry<K, V> getFirstEntry() {
+        var entry = root;
+        if (entry != null)
+            while (entry.left != null)
+                entry = entry.left;
+        return entry;
+    }
+
+    private final Entry<K, V> getLastEntry() {
+        var entry = root;
+        if (entry != null)
+            while (entry.right != null)
+                entry = entry.right;
+        return entry;
+    }
+
     @Override
     public final SortedMap<K,V> headMap​(final K toKey) {
         throw new UnsupportedOperationException();
@@ -150,8 +178,63 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final Map.Entry<K, V> lastEntry() {
+        return simpleImmutableEntry(getLastEntry());
+    }
+
+    @Override
     public final NavigableSet<K> navigableKeySet() {
         throw new UnsupportedOperationException();
+    }
+
+    private static <K, V> Entry<K, V> next(Entry<K, V> entry) {
+        assert entry != null;
+        if (entry.right != null) {
+            entry = entry.right;
+            while (entry.left != null)
+                entry = entry.left;
+            return entry;
+        }
+        var parent = entry.parent;
+        while (parent != null && entry == parent.right) {
+            entry = parent;
+            parent = entry.parent;
+        }
+        return parent;
+    }
+
+    @Override
+    public final Map.Entry<K,V> pollFirstEntry() {
+        final var entry = getFirstEntry();
+        final var result = simpleImmutableEntry(entry);
+        if (entry != null)
+            removeEntry(entry);
+        return result;
+    }
+
+    @Override
+    public final Map.Entry<K,V> pollLastEntry() {
+        final var entry = getFirstEntry();
+        final var result = simpleImmutableEntry(entry);
+        if (entry != null)
+            removeEntry(entry);
+        return result;
+    }
+
+    private static <K, V> Entry<K, V> previous(Entry<K, V> entry) {
+        assert entry != null;
+        if (entry.left != null) {
+            entry = entry.left;
+            while (entry.right != null)
+                entry = entry.right;
+            return entry;
+        }
+        var parent = entry.parent;
+        while (parent != null && entry == parent.left) {
+            entry = parent;
+            parent = entry.parent;
+        }
+        return parent;
     }
 
     @Override
@@ -213,38 +296,6 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
         return removeEntry(node);
     }
 
-    private static <K, V> Entry<K, V> next(Entry<K, V> entry) {
-        assert entry != null;
-        if (entry.right != null) {
-            entry = entry.right;
-            while (entry.left != null)
-                entry = entry.left;
-            return entry;
-        }
-        var parent = entry.parent;
-        while (parent != null && entry == parent.right) {
-            entry = parent;
-            parent = entry.parent;
-        }
-        return parent;
-    }
-
-    private static <K, V> Entry<K, V> previous(Entry<K, V> entry) {
-        assert entry != null;
-        if (entry.left != null) {
-            entry = entry.left;
-            while (entry.right != null)
-                entry = entry.right;
-            return entry;
-        }
-        var parent = entry.parent;
-        while (parent != null && entry == parent.left) {
-            entry = parent;
-            parent = entry.parent;
-        }
-        return parent;
-    }
-
     private final V removeEntry(Entry<K, V> entry) {
         assert entry != null;
         final var value = entry.value;
@@ -268,6 +319,12 @@ public abstract class TreeMap<K, V> extends AbstractMap<K, V>
         entry.left = entry.parent = entry.right = null;
         --size;
         return value;
+    }
+
+    private static <K, V> Map.Entry<K,V> simpleImmutableEntry(
+        final Entry<K, V> entry
+    ) {
+        return entry == null ? null : new SimpleImmutableEntry<>(entry);
     }
 
     @Override

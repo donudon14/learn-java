@@ -2,10 +2,7 @@ package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
 import com.github.donudon14.learn.java.Heap;
-
 import static java.util.Objects.checkFromToIndex;
-
-import static java.util.Arrays.asList;
 
 public final class HeapSort {
     public static <T> void sort(
@@ -17,8 +14,8 @@ public final class HeapSort {
 
     public static <T> void sort(
         final T[] array,
-        int fromIndex,
-        int toIndex,
+        final int fromIndex,
+        final int toIndex,
         final Comparator<? super T> comparator
     ) {
         checkFromToIndex(fromIndex, toIndex, array.length);
