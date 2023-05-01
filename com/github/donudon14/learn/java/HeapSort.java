@@ -2,7 +2,6 @@ package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
 import com.github.donudon14.learn.java.Heap;
-import static java.util.Objects.checkFromToIndex;
 
 public final class HeapSort {
     public static <T> void sort(

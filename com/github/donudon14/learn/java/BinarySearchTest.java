@@ -1,7 +1,6 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
-import java.util.Arrays;
 import static java.util.Arrays.setAll;
 import static com.github.donudon14.learn.java.BinarySearch.binarySearch;
 import static com.github.donudon14.learn.java.BinarySearch.lowerBound;
