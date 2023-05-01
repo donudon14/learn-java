@@ -1,11 +1,10 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
-import static com.github.donudon14.learn.java.Arrays.indexOfMin;
 import static com.github.donudon14.learn.java.Arrays.swap;
 import static java.lang.Math.min;
-import static java.util.Arrays.asList;
 import static java.util.Objects.checkFromToIndex;
+import static com.github.donudon14.learn.java.Arrays.greaterThan;
 
 public final class ShellSort {
     private static final int[] GAPS = new int[328];
@@ -39,9 +38,8 @@ public final class ShellSort {
         for (int step = toIndex - fromIndex >> 1; step > 0; step >>= 1) {
             for (int i = fromIndex + step; i < toIndex; ++i)
                 for (int j = i - step;
-                    j >= 0 && comparator.compare(array[j], array[j + step]) > 0;
-                    j -= step
-                )
+                    j >= 0 && greaterThan(array, j, j + step, comparator);
+                    j -= step)
                     swap(array, j, j + step);
         }
     }

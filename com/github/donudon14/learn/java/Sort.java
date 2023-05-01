@@ -5,6 +5,9 @@ import static com.github.donudon14.learn.java.Arrays.greaterThan;
 import static java.util.Objects.checkFromToIndex;
 
 public final class Sort {
+    private Sort() {
+    }
+
     public static <T> boolean isSorted(
         final T[] array,
         final Comparator<? super T> comparator

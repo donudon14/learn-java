@@ -2,11 +2,10 @@ package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
 import java.util.function.BiConsumer;
+import static com.github.donudon14.learn.java.Sort.isSorted;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.setAll;
 import static java.util.Collections.shuffle;
-
-import static com.github.donudon14.learn.java.Arrays.isSorted;
 
 public final class SortTest {
     private static final int LENGTH = 64, ITERATION = 4096;
