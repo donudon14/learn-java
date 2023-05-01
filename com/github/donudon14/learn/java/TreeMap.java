@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 public final class TreeMap<K, V> extends AbstractMap<K, V>
     implements NavigableMap<K, V>, Cloneable {
     private Entry<K, V> root = null;
-    private final Comparator<? super K> comparator = null;
+    private final Comparator<? super K> comparator;
     private int size = 0;
 
     private static final class Entry<K, V> implements Map.Entry<K, V> {
@@ -71,6 +71,14 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         }
     }
 
+    public TreeMap() {
+        this.comparator = null;
+    }
+
+    public TreeMap(final Comparator<? super K> comparator) {
+        this.comparator = comparator;
+    }
+
     private final void addEntry(
         final K key,
         final V value,
@@ -95,6 +103,16 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final Comparator<? super K> comparator() {
+        return comparator;
+    }
+
+    @Override
+    public final boolean containsKey(final Object object) {
+        return getEntry(object) != null;
+    }
+
+    @Override
     public final NavigableSet<K> descendingKeySet() {
         throw new UnsupportedOperationException();
     }
@@ -114,6 +132,12 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return simpleImmutableEntry(getFirstEntry());
     }
 
+    @Override
+    public final V get(final Object object) {
+        final var entry = getEntry(object);
+        return (entry == null ? null : entry.value);
+    }
+
     private final Entry<K, V> getEntry(final Object object) {
         if (comparator == null) {
             requireNonNull(object);
@@ -131,8 +155,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         } else
             for (var entry = root; entry != null; ) {
                 @SuppressWarnings("unchecked")
-                final var key = (K) object;
-                final int result = comparator.compare(key, entry.key);
+                final int result = comparator.compare((K) object, entry.key);
                 if (result < 0)
                     entry = entry.left;
                 else if (result > 0)
@@ -263,7 +286,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
                     return oldValue;
                 }
             }
-        } else {
+        } else
             for (var entry = root; entry != null; ) {
                 parent = entry;
                 result = comparator.compare(key, entry.key);
@@ -278,7 +301,6 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
                     return oldValue;
                 }
             }
-        }
         addEntry(key, value, parent, result < 0);
         return null;
     }
