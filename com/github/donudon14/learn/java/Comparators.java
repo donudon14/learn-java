@@ -1,15 +1,20 @@
 package com.github.donudon14.learn.java;
 
 import java.util.Comparator;
+import static java.util.Objects.compare;
 
 public final class Comparators {
+    private Comparators() {
+    }
+
     public static <T> T clamp(
         final T x,
         final T a,
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) < 0 ? a : comparator.compare(b, x) < 0 ? b : x;
+        return compare(x, a, comparator) < 0 ? a :
+            compare(b, x, comparator) < 0 ? b : x;
     }
 
     public static <T> boolean inRange(
@@ -18,7 +23,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) >= 0 && comparator.compare(x, b) < 0;
+        return compare(x, a, comparator) >= 0 && compare(x, b, comparator) < 0;
     }
 
     public static <T> boolean inRangeClosed(
@@ -27,7 +32,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(x, a) >= 0 && comparator.compare(b, x) >= 0;
+        return compare(x, a, comparator) >= 0 && compare(b, x, comparator) >= 0;
     }
 
     public static <T> T max(
@@ -35,7 +40,7 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(a, b) < 0 ? b : a;
+        return compare(a, b, comparator) < 0 ? b : a;
     }
 
     public static <T> T min(
@@ -43,6 +48,6 @@ public final class Comparators {
         final T b,
         final Comparator<? super T> comparator
     ) {
-        return comparator.compare(a, b) > 0 ? b : a;
+        return compare(a, b, comparator) > 0 ? b : a;
     }
 }
