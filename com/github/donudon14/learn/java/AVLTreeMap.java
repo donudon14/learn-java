@@ -10,6 +10,7 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
+import static java.lang.Math.abs;
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
@@ -94,6 +95,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         else
             parent.right = entry;
         ++size;
+        rebalanceInsertion(entry);
     }
 
     @Override
@@ -312,6 +314,38 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         return put(key, value, false);
     }
 
+    private final void rebalanceInsertion(Entry<K, V> entry) {
+        for (var parent = entry.parent; parent != null;
+            entry = parent, parent = entry.parent
+        ) {
+            if (entry == parent.left)
+                --parent.balance;
+            else
+                ++parent.balance;
+            if (parent.balance < -1 || parent.balance > 1) {
+                rebalance(parent);
+                parent = parent.parent;
+            }
+            if (parent.balance == 0)
+                break;
+        }
+    }
+
+    private final Entry<K, V> rebalance(final Entry<K, V> entry) {
+        assert abs(entry.balance) > 1;
+        if (entry.balance < -1) {
+            if (entry.left.balance > 0)
+                rotateLeftRight(entry);
+            else
+                rotateRight(entry);
+        } else {
+            if (entry.right.balance < 0)
+                rotateRightLeft(entry);
+            else
+                rotateLeft(entry);
+        }
+    }
+
     @Override
     public final V remove(final Object object) {
         final var node = getEntry(object);
@@ -366,7 +400,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
             entry.balance = right.balance = 0;
     }
 
-    private static void rotateRight() {
+    private final void rotateRight(final Entry<K, V> entry) {
         assert entry != null;
         final var left = entry.left;
         entry.left = left.right;
@@ -386,6 +420,16 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
             left.balance = 1;
         } else
             entry.balance = left.balance = 0;
+    }
+
+    private final void rotateLeftRight(final Entry<K, V> entry) {
+        rotateLeft(entry.left);
+        rotateRight(entry);
+    }
+
+    private final void rotateRightLeft(final Entry<K, V> entry) {
+        rotateRight(entry.right);
+        rotateLeft(entry);
     }
 
     private static <K, V> Map.Entry<K,V> simpleImmutableEntry(
