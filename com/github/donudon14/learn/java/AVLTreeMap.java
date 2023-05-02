@@ -323,7 +323,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
                 --parent.balance;
             else
                 ++parent.balance;
-            if (parent.balance < -1 || parent.balance > 1) {
+            if (abs(entry.balance) == 2) {
                 rebalance(parent);
                 parent = parent.parent;
             }
@@ -334,7 +334,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
 
     private final void rebalance(final Entry<K, V> entry) {
         assert abs(entry.balance) == 2;
-        if (entry.balance < -1) {
+        if (entry.balance < 0) {
             if (entry.left.balance > 0)
                 rotateLeftRight(entry);
             else
