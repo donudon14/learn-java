@@ -332,7 +332,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
     }
 
     private final Entry<K, V> rebalance(final Entry<K, V> entry) {
-        assert abs(entry.balance) > 1;
+        assert abs(entry.balance) == 2;
         if (entry.balance < -1) {
             if (entry.left.balance > 0)
                 rotateLeftRight(entry);
