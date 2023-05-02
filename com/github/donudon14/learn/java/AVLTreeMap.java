@@ -24,6 +24,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         private K key = null;
         private V value = null;
         private Entry<K, V> left = null, parent = null, right = null;
+        private byte balance = 0;
 
         private Entry(
             final K key,
@@ -463,7 +464,6 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
     ) {
         throw new UnsupportedOperationException();
     }
-
 
     @Override
     public final Collection<V> values() {
