@@ -72,11 +72,11 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         }
     }
 
-    public TreeMap() {
+    public AVLTreeMap() {
         this.comparator = null;
     }
 
-    public TreeMap(final Comparator<? super K> comparator) {
+    public AVLTreeMap(final Comparator<? super K> comparator) {
         this.comparator = comparator;
     }
 
@@ -379,7 +379,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
     }
 
     private final void rotateLeft(final Entry<K, V> entry) {
-        assert entry != null;
+        assert entry != null && entry.right != null;
         final var right = entry.right;
         entry.right = right.left;
         if (right.left != null)
@@ -401,7 +401,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
     }
 
     private final void rotateRight(final Entry<K, V> entry) {
-        assert entry != null;
+        assert entry != null && entry.left != null;
         final var left = entry.left;
         entry.left = left.right;
         if (left.right != null)
