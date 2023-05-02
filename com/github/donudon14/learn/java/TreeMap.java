@@ -119,12 +119,12 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final NavigableMap<K,V> descendingMap() {
+    public final NavigableMap<K, V> descendingMap() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final Set<Map.Entry<K,V>> entrySet() {
+    public final Set<Map.Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException();
     }
 
@@ -177,6 +177,35 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return entry;
     }
 
+    private final Entry<K, V> getHigherEntry(final K key) {
+        if (comparator == null)
+            requireNonNull(key);
+        for (var entry = root; entry != null; ) {
+            final int result;
+            if (comparator == null) {
+                @SuppressWarnings("unchecked")
+                result = ((Comparable<? super K>) key).compareTo(entry.key);
+            } else
+                result = comparator.compare(key, entry.key);
+            if (result < 0) {
+                if (entry.left == null)
+                    return entry;
+                entry = entry.left;
+            } else {
+                if (entry.right == null) {
+                    var parent = entry.parent;
+                    while (parent != null && entry == parent.right) {
+                        entry = parent;
+                        parent = entry.parent;
+                    }
+                    return parent;
+                }
+                entry = entry.right;
+            }
+        }
+        return null;
+    }
+
     private final Entry<K, V> getLastEntry() {
         var entry = root;
         if (entry != null)
@@ -185,13 +214,42 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return entry;
     }
 
+    private final Entry<K, V> getLowerEntry(final K key) {
+        if (comparator == null)
+            requireNonNull(key);
+        for (var entry = root; entry != null; ) {
+            final int result;
+            if (comparator == null) {
+                @SuppressWarnings("unchecked")
+                result = ((Comparable<? super K>) key).compareTo(entry.key);
+            } else
+                result = comparator.compare(key, entry.key);
+            if (result > 0) {
+                if (entry.right == null)
+                    return entry;
+                entry = entry.right;
+            } else {
+                if (entry.left == null) {
+                    var parent = entry.parent;
+                    while (parent != null && entry == parent.left) {
+                        entry = parent;
+                        parent = entry.parent;
+                    }
+                    return parent;
+                }
+                entry = entry.left;
+            }
+        }
+        return null;
+    }
+
     @Override
-    public final SortedMap<K,V> headMap​(final K toKey) {
+    public final SortedMap<K, V> headMap​(final K toKey) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final NavigableMap<K,V> headMap​(
+    public final NavigableMap<K, V> headMap​(
         final K toKey,
         final boolean inclusive
     ) {
@@ -230,7 +288,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final Map.Entry<K,V> pollFirstEntry() {
+    public final Map.Entry<K, V> pollFirstEntry() {
         final var entry = getFirstEntry();
         final var result = simpleImmutableEntry(entry);
         if (entry != null)
@@ -239,7 +297,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final Map.Entry<K,V> pollLastEntry() {
+    public final Map.Entry<K, V> pollLastEntry() {
         final var entry = getFirstEntry();
         final var result = simpleImmutableEntry(entry);
         if (entry != null)
@@ -345,14 +403,14 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return value;
     }
 
-    private static <K, V> Map.Entry<K,V> simpleImmutableEntry(
+    private static <K, V> Map.Entry<K, V> simpleImmutableEntry(
         final Entry<K, V> entry
     ) {
         return entry == null ? null : new SimpleImmutableEntry<>(entry);
     }
 
     @Override
-    public final NavigableMap<K,V> subMap​(
+    public final NavigableMap<K, V> subMap​(
         final K fromKey, final boolean fromInclusive,
         final K toKey, final boolean toInclusive
     ) {
@@ -360,17 +418,17 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final SortedMap<K,V> subMap​(final K fromKey, final K toKey) {
+    public final SortedMap<K, V> subMap​(final K fromKey, final K toKey) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final SortedMap<K,V> tailMap​(final K fromKey) {
+    public final SortedMap<K, V> tailMap​(final K fromKey) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final NavigableMap<K,V> tailMap​(
+    public final NavigableMap<K, V> tailMap​(
         final K fromKey,
         final boolean inclusive
     ) {
