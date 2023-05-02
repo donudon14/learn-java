@@ -81,7 +81,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         this.comparator = comparator;
     }
 
-    private final void addEntry(
+    private final Entry<K, V> addEntry(
         final K key,
         final V value,
         final Entry<K, V> parent,
@@ -96,7 +96,7 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
         else
             parent.right = entry;
         ++size;
-        rebalanceInsertion(entry);
+        return entry;
     }
 
     @Override
@@ -306,7 +306,8 @@ public final class AVLTreeMap<K, V> extends AbstractMap<K, V>
                     return oldValue;
                 }
             }
-        addEntry(key, value, parent, result < 0);
+        final var entry = addEntry(key, value, parent, result < 0);
+        rebalanceInsertion(entry);
         return null;
     }
 

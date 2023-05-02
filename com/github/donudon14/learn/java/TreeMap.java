@@ -79,7 +79,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         this.comparator = comparator;
     }
 
-    private final void addEntry(
+    private final Entry<K, V> addEntry(
         final K key,
         final V value,
         final Entry<K, V> parent,
@@ -94,6 +94,7 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         else
             parent.right = entry;
         ++size;
+        return entry;
     }
 
     @Override
