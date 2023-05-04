@@ -10,6 +10,7 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.function.ToIntFunction;
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
 
@@ -139,32 +140,28 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return entry == null ? null : entry.value;
     }
 
-    private final Entry<K, V> getEntry(final Object object) {
+    private final ToIntFunction<K> comparator(final Object object) {
         if (comparator == null) {
             requireNonNull(object);
             @SuppressWarnings("unchecked")
             final var comparable = (Comparable<? super K>) object;
-            for (var entry = root; entry != null; ) {
-                final int result = comparable.compareTo(entry.key);
-                if (result < 0)
-                    entry = entry.left;
-                else if (result > 0)
-                    entry = entry.right;
-                else
-                    return entry;
-            }
-        } else {
-            @SuppressWarnings("unchecked")
-            final var key = (K) object;
-            for (var entry = root; entry != null; ) {
-                final int result = comparator.compare(key, entry.key);
-                if (result < 0)
-                    entry = entry.left;
-                else if (result > 0)
-                    entry = entry.right;
-                else
-                    return entry;
-            }
+            return (final K entryKey) -> comparable.compareTo(entryKey);
+        }
+        @SuppressWarnings("unchecked")
+        final var key = (K) object;
+        return (final K entryKey) -> comparator.compare(key, entryKey);
+    }
+
+    private final Entry<K, V> getEntry(final Object object) {
+        final var comparator = comparator(object);
+        for (var entry = root; entry != null; ) {
+            final int result = comparator.applyAsInt(entry.key);
+            if (result < 0)
+                entry = entry.left;
+            else if (result > 0)
+                entry = entry.right;
+            else
+                return entry;
         }
         return null;
     }
@@ -178,15 +175,9 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     private final Entry<K, V> getHigherEntry(final K key) {
-        if (comparator == null)
-            requireNonNull(key);
+        final var comparator = comparator(key);
         for (var entry = root; entry != null; ) {
-            final int result;
-            if (comparator == null) {
-                @SuppressWarnings("unchecked")
-                result = ((Comparable<? super K>) key).compareTo(entry.key);
-            } else
-                result = comparator.compare(key, entry.key);
+            final int result = comparator.applyAsInt(entry.key);
             if (result < 0) {
                 if (entry.left == null)
                     return entry;
@@ -215,15 +206,9 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     private final Entry<K, V> getLowerEntry(final K key) {
-        if (comparator == null)
-            requireNonNull(key);
+        final var comparator = comparator(key);
         for (var entry = root; entry != null; ) {
-            final int result;
-            if (comparator == null) {
-                @SuppressWarnings("unchecked")
-                result = ((Comparable<? super K>) key).compareTo(entry.key);
-            } else
-                result = comparator.compare(key, entry.key);
+            final int result = comparator.applyAsInt(entry.key);
             if (result > 0) {
                 if (entry.right == null)
                     return entry;
@@ -329,39 +314,21 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     private final V put(final K key, final V value, final boolean replaceOld) {
         Entry<K, V> parent = null;
         int result = 0;
-        if (comparator == null) {
-            requireNonNull(key);
-            @SuppressWarnings("unchecked")
-            final var comparable = (Comparable<? super K>) key;
-            for (var entry = root; entry != null; ) {
-                parent = entry;
-                result = comparable.compareTo(entry.key);
-                if (result < 0)
-                    entry = entry.left;
-                else if (result > 0)
-                    entry = entry.right;
-                else {
-                    final var oldValue = entry.value;
-                    if (replaceOld || entry.value == null)
-                        entry.value = value;
-                    return oldValue;
-                }
+        final var comparator = comparator(key);
+        for (var entry = root; entry != null; ) {
+            parent = entry;
+            result = comparator.applyAsInt(entry.key);
+            if (result < 0)
+                entry = entry.left;
+            else if (result > 0)
+                entry = entry.right;
+            else {
+                final var oldValue = entry.value;
+                if (replaceOld || entry.value == null)
+                    entry.value = value;
+                return oldValue;
             }
-        } else
-            for (var entry = root; entry != null; ) {
-                parent = entry;
-                result = comparator.compare(key, entry.key);
-                if (result < 0)
-                    entry = entry.left;
-                else if (result > 0)
-                    entry = entry.right;
-                else {
-                    final var oldValue = entry.value;
-                    if (replaceOld || entry.value == null)
-                        entry.value = value;
-                    return oldValue;
-                }
-            }
+        }
         addEntry(key, value, parent, result < 0);
         return null;
     }
