@@ -2,6 +2,7 @@ package com.github.donudon14.learn.java;
 
 import java.util.AbstractList;
 import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.max;
@@ -31,12 +32,14 @@ public class ArrayList<E> extends AbstractList<E>
         this.elementData = elementData;
     }
 
+    @Override
     public final void clear() {
         for (int i = 0; i < size; ++i)
             elementData[i] = null;
         size = 0;
     }
 
+    @Override
     public final boolean add(final E element) {
         assert size <= elementData.length;
         if (size == elementData.length)
@@ -45,6 +48,7 @@ public class ArrayList<E> extends AbstractList<E>
         return true;
     }
 
+    @Override
     public final void add(final int index, final E element) {
         assert size <= elementData.length;
         if (index < 0 || index > size)
@@ -61,27 +65,31 @@ public class ArrayList<E> extends AbstractList<E>
         ++size;
     }
 
+    @Override
     public final boolean contains(final Object object) {
         return indexOf(object) != -1;
     }
 
+    public void ensureCapacity(final int minCapacity) {
+        if (minCapacity > elementData.length)
+            grow(minCapacity);
+    }
+
+    @Override
     public final E get(final int index) {
         checkIndex(index, size);
         return elementData[index];
     }
 
+    @Override
     public final int indexOf(final Object object) {
-        if (object == null) {
-            for (int i = 0; i < size; ++i)
-                if (elementData[i] == null)
-                    return i;
-        } else
-            for (int i = 0; i < size; ++i)
-                if (object.equals(elementData[i]))
-                    return i;
+        for (int i = 0; i < size; ++i)
+            if (Objects.equals(object, elementData[i]))
+                return i;
         return -1;
     }
 
+    @Override
     public final E set(final int index, final E element) {
         checkIndex(index, size);
         final var oldElement = elementData[index];
@@ -89,6 +97,7 @@ public class ArrayList<E> extends AbstractList<E>
         return oldElement;
     }
 
+    @Override
     public final int size() {
         return size;
     }
@@ -102,8 +111,7 @@ public class ArrayList<E> extends AbstractList<E>
         assert elementData.length < minCapacity;
         final int step = elementData.length >> 1;
         return elementData.length == MAX_ARRAY_LENGTH ? MAX_VALUE : max(
-            minCapacity,
-            step + min(elementData.length, MAX_ARRAY_LENGTH - step)
+            minCapacity, step + min(elementData.length, MAX_ARRAY_LENGTH - step)
         );
     }
 }
