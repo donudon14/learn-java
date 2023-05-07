@@ -265,6 +265,18 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return simpleImmutableEntry(getLastEntry());
     }
 
+
+    @Override
+    public final Map.Entry<K, V> lowerEntry(final K key) {
+        return simpleImmutableEntry(getLowerEntry(key));
+    }
+
+    @Override
+    public final K lowerKey(final K key) {
+        return keyOrNull(getLowerEntry(key));
+    }
+
+
     @Override
     public final NavigableSet<K> navigableKeySet() {
         throw new UnsupportedOperationException();
