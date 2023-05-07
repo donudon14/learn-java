@@ -242,6 +242,20 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final Map.Entry<K, V> higherEntry(final K key) {
+        return simpleImmutableEntry(getHigherEntry(key));
+    }
+
+    @Override
+    public final K higherKey(final K key) {
+        return keyOrNull(getHigherEntry(key));
+    }
+
+    private static <K, V> K keyOrNull(final Entry<K, V> entry) {
+        return entry == null ? null : entry.key;
+    }
+
+    @Override
     public final Set<K> keySet() {
         throw new UnsupportedOperationException();
     }
