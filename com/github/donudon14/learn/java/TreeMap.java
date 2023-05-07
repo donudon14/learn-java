@@ -99,6 +99,16 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final Map.Entry<K, V> ceilingEntry(final K key) {
+        return simpleImmutableEntry(getCeilingEntry(key));
+    }
+
+    @Override
+    public final K ceilingKey(final K key) {
+        return keyOrNull(getCeilingEntry(key));
+    }
+
+    @Override
     public final void clear() {
         root = null;
         size = 0;
@@ -107,6 +117,18 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     @Override
     public final Comparator<? super K> comparator() {
         return comparator;
+    }
+
+    private final ToIntFunction<K> comparator(final Object object) {
+        if (comparator == null) {
+            requireNonNull(object);
+            @SuppressWarnings("unchecked")
+            final var comparable = (Comparable<? super K>) object;
+            return (final K entryKey) -> comparable.compareTo(entryKey);
+        }
+        @SuppressWarnings("unchecked")
+        final var key = (K) object;
+        return (final K entryKey) -> comparator.compare(key, entryKey);
     }
 
     @Override
@@ -135,21 +157,43 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
+    public final Map.Entry<K, V> floorEntry(final K key) {
+        return simpleImmutableEntry(getFloorEntry(key));
+    }
+
+    @Override
+    public final K floorKey(final K key) {
+        return keyOrNull(getFloorEntry(key));
+    }
+
+    @Override
     public final V get(final Object object) {
         final var entry = getEntry(object);
         return entry == null ? null : entry.value;
     }
 
-    private final ToIntFunction<K> comparator(final Object object) {
-        if (comparator == null) {
-            requireNonNull(object);
-            @SuppressWarnings("unchecked")
-            final var comparable = (Comparable<? super K>) object;
-            return (final K entryKey) -> comparable.compareTo(entryKey);
+    private final Entry<K, V> getCeilingEntry(final K key) {
+        final var comparator = comparator(key);
+        for (var entry = root; entry != null; ) {
+            final int result = comparator.applyAsInt(entry.key);
+            if (result < 0) {
+                if (entry.left == null)
+                    return entry;
+                entry = entry.left;
+            } else if (result > 0) {
+                if (entry.right == null) {
+                    var parent = entry.parent;
+                    while (parent != null && entry == parent.right) {
+                        entry = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+                entry = entry.right;
+            } else
+                return entry;
         }
-        @SuppressWarnings("unchecked")
-        final var key = (K) object;
-        return (final K entryKey) -> comparator.compare(key, entryKey);
+        return null;
     }
 
     private final Entry<K, V> getEntry(final Object object) {
@@ -172,6 +216,35 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
             while (entry.left != null)
                 entry = entry.left;
         return entry;
+    }
+
+    @Override
+    public final K firstKey() {
+        return keyOrNull(getFirstEntry());
+    }
+
+    private final Entry<K, V> getFloorEntry(final K key) {
+        final var comparator = comparator(key);
+        for (var entry = root; entry != null; ) {
+            final int result = comparator.applyAsInt(entry.key);
+            if (result > 0) {
+                if (entry.right == null)
+                    return entry;
+                entry = entry.right;
+            } else if (result < 0) {
+                if (entry.left == null) {
+                    var parent = entry.parent;
+                    while (parent != null && entry == parent.left) {
+                        entry = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+                entry = entry.left;
+            } else
+                return entry;
+        }
+        return null;
     }
 
     private final Entry<K, V> getHigherEntry(final K key) {
@@ -265,6 +338,10 @@ public final class TreeMap<K, V> extends AbstractMap<K, V>
         return simpleImmutableEntry(getLastEntry());
     }
 
+    @Override
+    public final K lastKey() {
+        return keyOrNull(getLastEntry());
+    }
 
     @Override
     public final Map.Entry<K, V> lowerEntry(final K key) {
