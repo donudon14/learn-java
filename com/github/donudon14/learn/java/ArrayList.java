@@ -12,31 +12,20 @@ import static java.util.Arrays.copyOf;
 import static java.util.Objects.checkIndex;
 
 public class ArrayList<E> extends AbstractList<E>
-    implements List<E>, RandomAccess {
+    implements Cloneable, List<E>, RandomAccess {
     private static final int DEFAULT_CAPACITY = 10, MAX_ARRAY_LENGTH = MAX_VALUE - 2;
 
-    private E[] elementData;
-    private int size;
+    private Object[] elementData = null;
+    private int size = 0;
 
     public ArrayList() {
-        @SuppressWarnings("unchecked")
-        final var elementData = (E[]) new Object[DEFAULT_CAPACITY];
-        this.elementData = elementData;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(final int capacity) {
         if (capacity < 0)
             throw new IllegalArgumentException("Illegal Capacity: " + capacity);
-        @SuppressWarnings("unchecked")
-        final var elementData = (E[]) new Object[capacity];
-        this.elementData = elementData;
-    }
-
-    @Override
-    public final void clear() {
-        for (int i = 0; i < size; ++i)
-            elementData[i] = null;
-        size = 0;
+        elementData = new Object[capacity];
     }
 
     @Override
@@ -66,6 +55,25 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     @Override
+    public final void clear() {
+        for (int i = 0; i < size; ++i)
+            elementData[i] = null;
+        size = 0;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            @SuppressWarnings("unchecked")
+            final var clone = (ArrayList<E>) super.clone();
+            clone.elementData = copyOf(elementData, size);
+            return clone;
+        } catch (final CloneNotSupportedException exception) {
+            throw new InternalError(exception);
+        }
+    };
+
+    @Override
     public final boolean contains(final Object object) {
         return indexOf(object) != -1;
     }
@@ -78,7 +86,9 @@ public class ArrayList<E> extends AbstractList<E>
     @Override
     public final E get(final int index) {
         checkIndex(index, size);
-        return elementData[index];
+        @SuppressWarnings("unchecked")
+        final var element = (E) elementData[index];
+        return element;
     }
 
     @Override
@@ -92,7 +102,8 @@ public class ArrayList<E> extends AbstractList<E>
     @Override
     public final E set(final int index, final E element) {
         checkIndex(index, size);
-        final var oldElement = elementData[index];
+        @SuppressWarnings("unchecked")
+        final var oldElement = (E) elementData[index];
         elementData[index] = element;
         return oldElement;
     }
