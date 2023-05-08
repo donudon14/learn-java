@@ -62,7 +62,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     @Override
-    public Object clone() {
+    public final Object clone() {
         try {
             @SuppressWarnings("unchecked")
             final var clone = (ArrayList<E>) super.clone();
