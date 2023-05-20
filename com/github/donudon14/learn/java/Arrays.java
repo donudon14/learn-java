@@ -30,6 +30,23 @@ public final class Arrays {
         return false;
     }
 
+    /* public static <T> T[] copyOfRange(
+        final T[] original,
+        final int from,
+        final int to,
+        final int length
+    ) {
+    }
+
+    public static <T,U> T[] copyOfRange(
+        final U[] original,
+        final int from,
+        final int to,
+        final int length,
+        final Class<? extends T[]> newType
+    ) {
+    } */
+
     /**
      * a.compareTo(b) == 0 doesn't implie a.equals(b)
      * assert BigDecimal.ONE.equals(BigDecimal.valueOf(1.0)) == false;
@@ -80,7 +97,7 @@ public final class Arrays {
             throw new NoSuchElementException();
         int index = fromIndex;
         while (++fromIndex < toIndex)
-            if (comparator.compare(array[index], array[fromIndex]) < 0)
+            if (lessThan(array, index, fromIndex, comparator))
                 index = fromIndex;
         return index;
     }
@@ -103,7 +120,7 @@ public final class Arrays {
             throw new NoSuchElementException();
         int index = fromIndex;
         while (++fromIndex < toIndex)
-            if (comparator.compare(array[index], array[fromIndex]) > 0)
+            if (greaterThan(array, index, fromIndex, comparator))
                 index = fromIndex;
         return index;
     }
