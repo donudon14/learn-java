@@ -30,22 +30,28 @@ public final class Arrays {
         return false;
     }
 
-    /* public static <T> T[] copyOfRange(
-        final T[] original,
-        final int from,
-        final int to,
+    public static <T> T[] copyOfRange(
+        final T[] array,
+        final int fromIndex,
+        final int toIndex,
         final int length
     ) {
+        return copyOfRange(array, fromIndex, toIndex, length,
+            (Class<? extends T[]>) array.getClass()
+        );
     }
 
     public static <T,U> T[] copyOfRange(
-        final U[] original,
-        final int from,
-        final int to,
+        final U[] array,
+        final int fromIndex,
+        final int toFrom,
         final int length,
         final Class<? extends T[]> newType
     ) {
-    } */
+        return copyOfRange(array, fromIndex, max(toIndex, fromIndex + length),
+            newType
+        );
+    }
 
     /**
      * a.compareTo(b) == 0 doesn't implie a.equals(b)
