@@ -207,6 +207,34 @@ public final class Arrays {
         return compare(array, i, j, comparator) != 0;
     }
 
+    public static <T> void permute(
+        final T[] array,
+        final int[] permutation
+    ) {
+        permute(array, 0, array.length, permutation);
+    }
+
+    public static <T> void permute(
+        final T[] array,
+        final int fromIndex,
+        final int toIndex,
+        final int[] permutation
+    ) {
+        checkFromToIndex(fromIndex, toIndex, array.length);
+        final int length = toIndex - fromIndex;
+        if (length != permutation.length)
+            throw new IllegalArgumentException(
+                "array and permutation should have same size"
+            );
+        for (int i = 0; i < length; ++i)
+            swap(array, fromIndex + i, fromIndex + permutation[i]);
+    }
+
+    /* public static <T> void reversePermutation(final int[] permutation) {
+        for (int i = 0; i < length; ++i)
+            result[permutation[i]] = i;
+    } */
+
     public static <T> void reverse(final T[] array) {
         reverse(array, 0, array.length);
     }
